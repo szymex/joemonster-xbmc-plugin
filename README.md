@@ -1,4 +1,2 @@
-joemonster-xbmc-plugin
+XBMC plugin for playing videos from joemonster.org
 ======================
-
-XBMC video plugin for joemonster.org
