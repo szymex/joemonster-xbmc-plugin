@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.joemonster"
+       name="JoeMonster"
+       version="0.1"
+       provider-name="szymex">
+  <requires>
+    <import addon="xbmc.python" version="1.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="joemonster-addon.py">
+        <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>JoeMonster.org</summary>
+    <description>.. bo powaga zabija powoli</description>
+    <platform>all</platform>
+  </extension>
+</addon>
