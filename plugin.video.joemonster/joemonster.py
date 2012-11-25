@@ -62,7 +62,7 @@ class JoeMonster:
 			#plot = plot[0].replace('<br>', '') if len(plot)>0 else ''
 			
 			duration=re.compile('Czas trwania:</b>(.*?)<br>', re.DOTALL).findall(r)
-			duration=duration[0][:-3] if len(duration)>0 else ''
+			duration=duration[0] if len(duration)>0 else ''
 			isHit = 'lata' in r
 			if isHit: xbmc.log('hit: ' + title)
 
