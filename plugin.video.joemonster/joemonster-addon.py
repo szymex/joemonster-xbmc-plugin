@@ -31,8 +31,8 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 			if r['isHit']: 
 				title = '[COLOR red]HIT[/COLOR] ' + title
 				plot = '[COLOR red][I]Hicior sprzed lat[/I][/COLOR] \n' + plot
-
-			self.addVideoLink(title,r['link'], r['img'], infoLabels={'plot':plot, 'duration':r['duration'] } )
+			duration = r['duration-sec']/60 if r['duration-sec']>0 else ''
+			self.addVideoLink(title,r['link'], r['img'], infoLabels={'plot':plot, 'duration':str(duration) }, videoStreamInfo={'duration':r['duration-sec']} )
 		self.addViewLink(self.NEXT % (pg+1),'newest',pg+1)
 	  
 		if (pg==1):
