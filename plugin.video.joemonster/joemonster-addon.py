@@ -31,13 +31,14 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 			if r['isHit']: 
 				title = '[COLOR red]HIT[/COLOR] ' + title
 				plot = '[COLOR red][I]Hicior sprzed lat[/I][/COLOR] \n' + plot
+			#xbmc.log(title + '    ' + r['duration'])
+			self.addVideoLink(title,r['link'], r['img'], infoLabels={'plot':plot},videoStreamInfo={'duration':r['duration']}  )
 
-			self.addVideoLink(title,r['link'], r['img'], infoLabels={'plot':plot, 'duration':r['duration'] } )
 		self.addViewLink(self.NEXT % (pg+1),'newest',pg+1)
 	  
 		if (pg==1):
-			self.addViewLink('[COLOR brown] 2011 Najpopularniejsze [/COLOR]','top-popular')
-			self.addViewLink('[COLOR brown] 2011 Ulubione [/COLOR]','topfav')
+			self.addViewLink('[COLOR brown] 2012 Najpopularniejsze [/COLOR]','top-popular')
+			self.addViewLink('[COLOR brown] 2012 Ulubione [/COLOR]','topfav')
 	  
 
 	def handlePopular(self, pg=1, args=[]):

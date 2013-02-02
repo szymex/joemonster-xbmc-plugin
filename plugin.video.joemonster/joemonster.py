@@ -45,8 +45,8 @@ class JoeMonster:
 		#xbmc.log(content)
 		ret = common.parseDOM(content, "div", {'style': 'float:left;width:630px; position: relative'})
 
-		ret = common.parseDOM(ret, "table")
-		#xbmc.log(str(len(ret)))
+		ret = common.parseDOM(ret, "div", {'class':'mtv-row'})
+
 		retList = []		
 		for r in ret:
 			#xbmc.log(r)
@@ -65,7 +65,6 @@ class JoeMonster:
 			duration=duration[0] if len(duration)>0 else ''
 			isHit = 'lata' in r
 			if isHit: xbmc.log('hit: ' + title)
-
 			retList.append({'title': title, 'link':link, 'img': img, 'plot': plot, 'duration': duration, 'isHit':isHit })
 		
 		return retList
