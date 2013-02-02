@@ -3,6 +3,8 @@
 import urllib2,urllib,re,sys
 import CommonFunctions
 import xbmc
+from datetime import datetime
+import time
 
 reload(sys) 
 sys.setdefaultencoding('utf8')
@@ -62,10 +64,21 @@ class JoeMonster:
 			#plot = plot[0].replace('<br>', '') if len(plot)>0 else ''
 			
 			duration=re.compile('Czas trwania:</b>(.*?)<br>', re.DOTALL).findall(r)
-			duration=duration[0] if len(duration)>0 else ''
+			duration=duration[0].strip() if len(duration)>0 else ''
+			durationSec = 0
+			if len(duration) > 0:
+				try:
+					durationTs = datetime.strptime(duration, '%M:%S')
+				except TypeError:
+					durationTs = datetime(*(time.strptime(duration, '%M:%S')[0:6]))
+				durationSec=durationTs.second + durationTs.minute * 60 + durationTs.hour * 3600
+			
+				
+			xbmc.log(str(durationSec))
 			isHit = 'lata' in r
 			if isHit: xbmc.log('hit: ' + title)
-			retList.append({'title': title, 'link':link, 'img': img, 'plot': plot, 'duration': duration, 'isHit':isHit })
+
+			retList.append({'title': title, 'link':link, 'img': img, 'plot': plot, 'duration': duration, 'duration-sec': durationSec, 'isHit':isHit })
 		
 		return retList
 
