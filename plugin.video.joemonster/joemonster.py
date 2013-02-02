@@ -26,7 +26,7 @@ class JoeMonster:
 	def scrapVideoList2(self, pg=1, category='najnowsze'):
 		content = self.readContentList(pg, category) 	
 		matchTitle=re.compile("<tr valign=\"top\".*?img src=\"(.*?)\".*?<a href=\"(.*?)\".*?<b>(.*?)</b>.*?</tr>", re.DOTALL).findall(content)
-		xbmc.log(str(matchTitle))
+		#xbmc.log(str(matchTitle))
 		retList = []		
 		for m in matchTitle:
 			img = m[0]
@@ -44,24 +44,16 @@ class JoeMonster:
 		response = urllib2.urlopen(req)
 		content=response.read()
 		content = content.decode('iso-8859-2')#.encode('utf8')
-		#xbmc.log(content)
 		ret = common.parseDOM(content, "div", {'style': 'float:left;width:630px; position: relative'})
 
 		ret = common.parseDOM(ret, "div", {'class':'mtv-row'})
 
 		retList = []		
 		for r in ret:
-			#xbmc.log(r)
-			#title = common.parseDOM(r, "a", {'class': 'title'})[0]
-			#title = title.decode('iso-8859-2')#.encode('utf8')
-			#xbmc.log(title)
-			#title = common.parseDOM(title, "b")[0]
 			link = common.parseDOM(r, "a", {'class': 'title'}, 'href')[0]
 			img = common.parseDOM(r, "img", {}, 'src')[0]
 			title = common.parseDOM(r, "img", {}, 'title')[0]
 			plot = common.parseDOM(r, 'DIV')[0].replace('<br>', '')
-			#xbmc.log(str(plot))
-			#plot = plot[0].replace('<br>', '') if len(plot)>0 else ''
 			
 			duration=re.compile('Czas trwania:</b>(.*?)<br>', re.DOTALL).findall(r)
 			duration=duration[0].strip() if len(duration)>0 else ''
@@ -73,12 +65,35 @@ class JoeMonster:
 					durationTs = datetime(*(time.strptime(duration, '%M:%S')[0:6]))
 				durationSec=durationTs.second + durationTs.minute * 60 + durationTs.hour * 3600
 			
-				
-			xbmc.log(str(durationSec))
 			isHit = 'lata' in r
-			if isHit: xbmc.log('hit: ' + title)
 
 			retList.append({'title': title, 'link':link, 'img': img, 'plot': plot, 'duration': duration, 'duration-sec': durationSec, 'isHit':isHit })
+		
+		return retList
+
+	def scrapWaitingVideos(self, pg=1):
+		url='http://www.joemonster.org/filmy/poczekalnia/%d' % (pg)
+		xbmc.log(url)
+		
+		req = urllib2.Request(url)
+		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+		response = urllib2.urlopen(req)
+		content=response.read()
+		content = content.decode('iso-8859-2')
+
+		ret = common.parseDOM(content, "div", {'class':'mtvPoczekalniaFilm'})
+
+		retList = []		
+		for r in ret:
+			
+			matchImg=re.compile('IMG SRC=\"(.*?)\"', re.DOTALL).findall(r)
+			img = matchImg[0] if len(matchImg)>0 else ''
+			title = common.parseDOM(r, "h2")[0]
+			link = common.parseDOM(r, "a", {'class': 'titulo'}, 'href')[0]
+			likes = common.parseDOM(r, "div", {'class': 'mtvPoczekalniaOk'})[0]
+			
+			if link.startswith('/filmy'):
+				retList.append({'title': title, 'link':link, 'img': img, 'likes':likes})
 		
 		return retList
 

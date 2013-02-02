@@ -17,6 +17,7 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 		self.addHandler('popular', self.handlePopular)
 		self.addHandler('topfav', self.handleTopFav)
 		self.addHandler('top-popular', self.handleTopPopular)
+		self.addHandler('waiting', self.handleWaiting)
 
 	def handleNewest(self, pg=1, args={}):
 		jm = joemonster.JoeMonster()
@@ -38,6 +39,7 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 		self.addViewLink(self.NEXT % (pg+1),'newest',pg+1)
 	  
 		if (pg==1):
+			self.addViewLink('[COLOR blue] POCZEKALNIA [/COLOR]','waiting')
 			self.addViewLink('[COLOR brown] 2012 Najpopularniejsze [/COLOR]','top-popular')
 			self.addViewLink('[COLOR brown] 2012 Ulubione [/COLOR]','topfav')
 	  
@@ -57,8 +59,6 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 			title = "[COLOR green]%s[/COLOR] %s" % (num,  title[(title.find('.')+2):] )
 
 			self.addVideoLink(title,link, img)
-
-		#xbmcUtil.endOfDir()
 
 	def handleVideo(self, link):
 		jm = joemonster.JoeMonster()
@@ -100,6 +100,15 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 
 	  pg = int(pg) + 1
 	  self.addViewLink('[ NASTEPNA -'+str(pg)+'- ]','topfav', pg)
+
+	def handleWaiting(self, pg=1, args=[]):
+		jm = joemonster.JoeMonster()
+		result = jm.scrapWaitingVideos(pg);
+		i=0		
+
+		for r in result:
+			self.addVideoLink('[COLOR brown](' + r['likes'] + ')[/COLOR] ' + r['title'],r['link'], r['img'] )
+
 
 
 # -----------
