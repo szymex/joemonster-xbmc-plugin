@@ -128,7 +128,7 @@ class JoeMonster:
 		content = self.readVideoContent(link) 	
 		    
 		#---- youtube ----
-		matchTitle=re.compile("<object.*?data=\"http://www.youtube.com/v/(.*?)\"").findall(content)
+		matchTitle=re.compile('src="http://www.youtube.com/embed/(.*?)\?').findall(content)
 	
 		if (len(matchTitle) > 0):
 			vid = matchTitle[0]
