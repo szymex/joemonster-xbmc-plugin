@@ -40,8 +40,8 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 	  
 		if (pg==1):
 			self.addViewLink('[COLOR blue] POCZEKALNIA [/COLOR]','waiting')
-			self.addViewLink('[COLOR brown] 2012 Najpopularniejsze [/COLOR]','top-popular')
-			self.addViewLink('[COLOR brown] 2012 Ulubione [/COLOR]','topfav')
+			self.addViewLink('[COLOR brown] 2013 Najpopularniejsze [/COLOR]','top-popular')
+			self.addViewLink('[COLOR brown] 2013 Ulubione [/COLOR]','topfav')
 	  
 
 	def handlePopular(self, pg=1, args=[]):
