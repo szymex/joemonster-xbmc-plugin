@@ -110,6 +110,7 @@ class JoeMonster:
 
 	def scrapPopularFilms(self):
 		content = self.readPopularFilms() 	
+		content = content.decode('iso-8859-2')#.encode('utf8')
 		matchTitle=re.compile("<div class='mtvTopLista'><a href=\"(.*?)\".*?<img src=(.*?) .*?>(.*?)<.*?</div>").findall(content)
 					
 		#link, img, title
@@ -135,9 +136,9 @@ class JoeMonster:
 			return 'youtube', vid
 
 		#---- joemonster video with redirection ----
-		matchTitle=re.compile("<embed src=\"http://www.joemonster.org/emb/(.*?)\".*?>").findall(content)
+		matchTitle=re.compile("<embed src=\"http://(www.|)joemonster.org/emb/(.*?)\".*?>").findall(content)
 		if (len(matchTitle) > 0):
-			vidUrl = 'http://www.joemonster.org/emb/' + matchTitle[0]
+			vidUrl = 'http://www.joemonster.org/emb/' + matchTitle[0][1]
 	  		req = urllib2.Request(vidUrl)
 			req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
 			response = urllib2.urlopen(req)
@@ -154,7 +155,7 @@ class JoeMonster:
 			return 'link', jmVidLink
 
 		#---- vimeo ----
-		matchTitle=re.compile('<embed src=\"http://vimeo.com/moogaloop.swf\?clip_id=(.*?)"').findall(content)
+		matchTitle=re.compile('<IFRAME src=\"http://player.vimeo.com/video/(.*?)"').findall(content)
 		if (len(matchTitle) > 0):
 			vid = matchTitle[0]
 			return 'vimeo', vid
