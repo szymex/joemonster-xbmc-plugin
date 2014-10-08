@@ -43,7 +43,7 @@ class JoeMonster:
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
 		response = urllib2.urlopen(req)
 		content=response.read()
-		content = content.decode('iso-8859-2')#.encode('utf8')
+		#content = content.decode('iso-8859-2')#.encode('utf8')
 		ret = common.parseDOM(content, "div", {'style': 'float:left;width:630px; position: relative'})
 
 		ret = common.parseDOM(ret, "div", {'class':'mtv-row'})
@@ -79,7 +79,7 @@ class JoeMonster:
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
 		response = urllib2.urlopen(req)
 		content=response.read()
-		content = content.decode('iso-8859-2')
+		#content = content.decode('iso-8859-2')
 
 		ret = common.parseDOM(content, "div", {'class':'mtvPoczekalniaFilm'})
 
@@ -110,7 +110,7 @@ class JoeMonster:
 
 	def scrapPopularFilms(self):
 		content = self.readPopularFilms() 	
-		content = content.decode('iso-8859-2')#.encode('utf8')
+		#content = content.decode('iso-8859-2')#.encode('utf8')
 		matchTitle=re.compile("<div class='mtvTopLista'><a href=\"(.*?)\".*?<img src=(.*?) .*?>(.*?)<.*?</div>").findall(content)
 					
 		#link, img, title
