@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-import urllib,urllib2,re,xbmcplugin,xbmcgui, xbmc
+
 import joemonster
 import xbmcutil as xbmcUtil
+
 
 scriptID = 'plugin.video.plugin.video.joemonster'
 scriptname = "JoeMonster"
 
 
-class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
+class JoeMonsterAddon(xbmcUtil.ViewAddonAbstract):
 	ADDON_ID = 'plugin.video.joemonster'
 	NEXT = '[COLOR blue]   ➔  NASTĘPNA (%d)  ➔[/COLOR]'
 
@@ -21,94 +22,95 @@ class JoeMonsterAddon (xbmcUtil.ViewAddonAbstract):
 
 	def handleNewest(self, pg=1, args={}):
 		jm = joemonster.JoeMonster()
-		result = jm.scrapVideoList(int(pg), 'najnowsze');
-		if (pg==1):
-			self.addViewLink('[COLOR blue][B]NAJPOTWORNIEJSZE [/B][/COLOR]','popular')
-	  
+		result = jm.scrapVideoList(int(pg), 'najnowsze')
+		if pg == 1:
+			self.addViewLink('[COLOR blue][B]NAJPOTWORNIEJSZE [/B][/COLOR]', 'popular')
+
 		for r in result:
 			title = r['title']
 			plot = r['plot']
-			
-			if r['isHit']: 
+
+			if r['isHit']:
 				title = '[COLOR red]HIT[/COLOR] ' + title
 				plot = '[COLOR red][I]Hicior sprzed lat[/I][/COLOR] \n' + plot
 
-			duration = r['duration-sec']/60 if r['duration-sec']>0 else ''
-			self.addVideoLink(title,r['link'], r['img'], infoLabels={'plot':plot, 'duration':str(duration) }, videoStreamInfo={'duration':r['duration-sec']} )
+			duration = r['duration-sec'] / 60 if r['duration-sec'] > 0 else ''
+			self.addVideoLink(title, r['link'], r['img'], infoLabels={'plot': plot, 'duration': str(duration)}, videoStreamInfo={'duration': r['duration-sec']})
 
-		self.addViewLink(self.NEXT % (pg+1),'newest',pg+1)
-	  
-		if (pg==1):
-			self.addViewLink('[COLOR blue] POCZEKALNIA [/COLOR]','waiting')
-			self.addViewLink('[COLOR brown] 2013 Najpopularniejsze [/COLOR]','top-popular')
-			self.addViewLink('[COLOR brown] 2013 Ulubione [/COLOR]','topfav')
-	  
+		self.addViewLink(self.NEXT % (pg + 1), 'newest', pg + 1)
+
+		if pg == 1:
+			self.addViewLink('[COLOR blue] POCZEKALNIA [/COLOR]', 'waiting')
+			self.addViewLink('[COLOR brown] 2013 Najpopularniejsze [/COLOR]', 'top-popular')
+			self.addViewLink('[COLOR brown] 2013 Ulubione [/COLOR]', 'topfav')
 
 	def handlePopular(self, pg=1, args=[]):
 		jm = joemonster.JoeMonster()
-		result = jm.scrapPopularFilms();
-	  
-		i=0		
+		result = jm.scrapPopularFilms()
+
+		i = 0
 		for link, img, title in result:
-			i+=1
-			if i==1:self.addViewLink('[COLOR blue][B] ULUBIONE [/B][/COLOR]','')
-			if i==11:self.addViewLink('[COLOR blue][B] OGLĄDANE [/B][/COLOR]','')
-			if i==21:self.addViewLink('[COLOR blue][B] KOMENTSY [/B][/COLOR]','')
+			i += 1
+			if i == 1:
+				self.addViewLink('[COLOR blue][B] ULUBIONE [/B][/COLOR]', '')
+			if i == 11:
+				self.addViewLink('[COLOR blue][B] OGLĄDANE [/B][/COLOR]', '')
+			if i == 21:
+				self.addViewLink('[COLOR blue][B] KOMENTSY [/B][/COLOR]', '')
 
-			num = title[:title.find('.')+1]			
-			title = "[COLOR green]%s[/COLOR] %s" % (num,  title[(title.find('.')+2):] )
+			num = title[:title.find('.') + 1]
+			title = "[COLOR green]%s[/COLOR] %s" % (num, title[(title.find('.') + 2):])
 
-			self.addVideoLink(title,link, img)
+			self.addVideoLink(title, link, img)
 
 	def handleVideo(self, link):
 		jm = joemonster.JoeMonster()
 		vid = jm.scrapVideo(link)
-		
-		if (vid != None):
+
+		if vid is not None:
 			vidType, vidLink = vid
-			if (vidType == 'youtube'):
+			if vidType == 'youtube':
 				youtubeLink = "plugin://plugin.video.youtube/?action=play_video&path=/root/video&videoid=" + vidLink
 				return youtubeLink
-			
-			if (vidType == 'vimeo'):
-				#'plugin://plugin.video.vimeo/', '0', '?path=/root/explore/staffpicks&action=play_video&videoid=47140924				
+
+			if vidType == 'vimeo':
+				# 'plugin://plugin.video.vimeo/', '0', '?path=/root/explore/staffpicks&action=play_video&videoid=47140924
 				vimeoLink = "plugin://plugin.video.vimeo/?action=play_video&videoid=" + vidLink
 				return vimeoLink
 
-			if (vidType == 'link'):
+			if vidType == 'link':
 				return vidLink
 		return None
-		
-	   
+
 	def handleTopPopular(self, pg=1, args=[]):
-	  jm = joemonster.JoeMonster()
-	  result = jm.scrapVideoList(int(pg), 'najpopularniejsze');
+		jm = joemonster.JoeMonster()
+		result = jm.scrapVideoList(int(pg), 'najpopularniejsze')
 
-	  for r in result:
-	    self.addVideoLink(r['title'],r['link'], r['img'])
+		for r in result:
+			self.addVideoLink(r['title'], r['link'], r['img'])
 
-	  pg = int(pg) + 1
-	  self.addViewLink('[ NASTEPNA -'+str(pg)+'- ]','top-popular', pg)
-	  #xbmcUtil.endOfDir()
-	   
+		pg = int(pg) + 1
+		self.addViewLink('[ NASTEPNA -' + str(pg) + '- ]', 'top-popular', pg)
+
+	# xbmcUtil.endOfDir()
+
 	def handleTopFav(self, pg=1, args=[]):
-	  jm = joemonster.JoeMonster()
-	  result = jm.scrapVideoList(int(pg), 'ulubione');
+		jm = joemonster.JoeMonster()
+		result = jm.scrapVideoList(int(pg), 'ulubione')
 
-	  for r in result:
-	    self.addVideoLink(r['title'],r['link'], r['img'])
+		for r in result:
+			self.addVideoLink(r['title'], r['link'], r['img'])
 
-	  pg = int(pg) + 1
-	  self.addViewLink('[ NASTEPNA -'+str(pg)+'- ]','topfav', pg)
+		pg = int(pg) + 1
+		self.addViewLink('[ NASTEPNA -' + str(pg) + '- ]', 'topfav', pg)
 
 	def handleWaiting(self, pg=1, args=[]):
 		jm = joemonster.JoeMonster()
-		result = jm.scrapWaitingVideos(pg);
-		i=0		
+		result = jm.scrapWaitingVideos(pg)
+		i = 0
 
 		for r in result:
-			self.addVideoLink('[COLOR brown](' + r['likes'] + ')[/COLOR] ' + r['title'],r['link'], r['img'] )
-
+			self.addVideoLink('[COLOR brown](' + r['likes'] + ')[/COLOR] ' + r['title'], r['link'], r['img'])
 
 
 # -----------
