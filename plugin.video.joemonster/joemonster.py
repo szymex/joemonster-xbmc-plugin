@@ -128,7 +128,10 @@ class JoeMonster:
 
 	@staticmethod
 	def readVideoContent(link):
-		url = 'http://www.joemonster.org/' + link
+		if link.startswith("http"):
+			url = link
+		else:
+			url = 'http://www.joemonster.org/' + link
 		req = urllib2.Request(url)
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
 		response = urllib2.urlopen(req)
@@ -171,5 +174,22 @@ class JoeMonster:
 			vid = matchTitle[0]
 			return 'vimeo', vid
 
-		#could not scrap video	
+		# ---- joemonster iframe ----
+		matchTitle = re.compile('<iframe .*? src=\"http://joemonster.org/embtv.php(.*?)"').findall(content)
+		if len(matchTitle) > 0:
+			iframeLink = 'embtv.php' + matchTitle[0]
+			iframeContent = self.readVideoContent(iframeLink)
+			matchLink = re.compile('src=\"(http://vader.*?\.mp4)"').findall(iframeContent)
+			if len(matchLink) > 0:
+				return 'link', matchLink[0]
+
+		# ---- funnyordie ----
+		matchTitle = re.compile('<IFRAME src=\"(http://www.funnyordie.com/embed/.*?)"').findall(content)
+		if len(matchTitle) > 0:
+			iframeContent = self.readVideoContent(matchTitle[0])
+			matchLink = re.compile('src=\"(http://.*?\.mp4)"').findall(iframeContent)
+			if len(matchLink) > 0:
+				return 'link', matchLink[0]
+
+		#could not scrap video
 		return None
