@@ -1,7 +1,7 @@
 PLUGIN.VIDEO.JOEMONSTER
 ======================
 
-**XBMC plugin for playing videos from joemonster.org**
+**Kodi plugin for playing videos from joemonster.org**
 
 Download from: http://xbmc.org.pl/download/viewcategory/4-xbmc-wtyczki-pluginy
 

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from datetime import date
+
 import joemonster
 import xbmcutil as xbmcUtil
 
@@ -40,9 +42,10 @@ class JoeMonsterAddon(xbmcUtil.ViewAddonAbstract):
 		self.addViewLink(self.NEXT % (pg + 1), 'newest', pg + 1)
 
 		if pg == 1:
+			prevYear = date.today().year - 1
 			self.addViewLink('[COLOR blue] POCZEKALNIA [/COLOR]', 'waiting')
-			self.addViewLink('[COLOR brown] 2013 Najpopularniejsze [/COLOR]', 'top-popular')
-			self.addViewLink('[COLOR brown] 2013 Ulubione [/COLOR]', 'topfav')
+			self.addViewLink("[COLOR brown] %d Najpopularniejsze [/COLOR]" % prevYear, 'top-popular')
+			self.addViewLink("[COLOR brown] %d Ulubione [/COLOR]" % prevYear, 'topfav')
 
 	def handlePopular(self, pg=1, args=[]):
 		jm = joemonster.JoeMonster()

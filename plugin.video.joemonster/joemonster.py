@@ -123,7 +123,7 @@ class JoeMonster:
 		# content = content.decode('iso-8859-2')#.encode('utf8')
 		matchTitle = re.compile("<div class='mtvTopLista'><a href=\"(.*?)\".*?<img src=(.*?) .*?>(.*?)<.*?</div>").findall(content)
 
-		#link, img, title
+		# link, img, title
 		return matchTitle
 
 	@staticmethod
@@ -168,7 +168,7 @@ class JoeMonster:
 			jmVidLink = urllib.unquote(matchTitle[0])
 			return 'link', jmVidLink
 
-		#---- vimeo ----
+		# ---- vimeo ----
 		matchTitle = re.compile('<IFRAME src=\"http://player.vimeo.com/video/(.*?)"').findall(content)
 		if len(matchTitle) > 0:
 			vid = matchTitle[0]
