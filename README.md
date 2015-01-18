@@ -12,3 +12,8 @@ Download from: http://xbmc.org.pl/download/viewcategory/4-xbmc-wtyczki-pluginy
 Do pobrania z: http://xbmc.org.pl/download/viewcategory/4-xbmc-wtyczki-pluginy
 
 Forum: http://xbmc.org.pl/forum/10-XBMC---Wtyczki-pluginy/2172-wtyczka-joemonster-org
+
+
+---------
+
+License: Apache 2.0
