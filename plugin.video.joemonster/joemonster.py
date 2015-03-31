@@ -175,7 +175,7 @@ class JoeMonster:
 			return 'vimeo', vid
 
 		# ---- joemonster iframe ----
-		matchTitle = re.compile('<iframe .*? src=\"http://joemonster.org/embtv.php(.*?)"').findall(content)
+		matchTitle = re.compile('<iframe .*? src=\"http://joemonster.org/.embtv.php(.*?)"').findall(content)
 		if len(matchTitle) > 0:
 			iframeLink = 'embtv.php' + matchTitle[0]
 			iframeContent = self.readVideoContent(iframeLink)
