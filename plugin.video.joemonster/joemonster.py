@@ -54,9 +54,7 @@ class JoeMonster:
 		response = urllib2.urlopen(req)
 		content = response.read()
 		# content = content.decode('iso-8859-2')#.encode('utf8')
-		ret = common.parseDOM(content, "div", {'style': 'float:left;width:630px; position: relative'})
-
-		ret = common.parseDOM(ret, "div", {'class': 'mtv-row'})
+		ret = common.parseDOM(content, "div", {'class': 'mtv-row'})
 
 		retList = []
 		for r in ret:
