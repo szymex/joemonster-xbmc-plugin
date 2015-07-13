@@ -10,7 +10,6 @@ import time
 import CommonFunctions
 import xbmc
 
-
 reload(sys)
 sys.setdefaultencoding('utf8')
 
@@ -58,10 +57,16 @@ class JoeMonster:
 
 		retList = []
 		for r in ret:
+			if len(common.parseDOM(r, "a", {'class': 'title'}, 'href')) == 0:
+				continue
+
 			link = common.parseDOM(r, "a", {'class': 'title'}, 'href')[0]
 			img = common.parseDOM(r, "img", {}, 'src')[0]
 			title = common.parseDOM(r, "img", {}, 'title')[0]
-			plot = common.parseDOM(r, 'DIV')[0].replace('<br>', '')
+
+			# TODO: fix plot
+			plot = ""
+			# plot = common.parseDOM(r, 'div')[0].replace('<br>', '')
 
 			duration = re.compile('Czas trwania:</b>(.*?)<br>', re.DOTALL).findall(r)
 			duration = duration[0].strip() if len(duration) > 0 else ''
@@ -189,5 +194,5 @@ class JoeMonster:
 			if len(matchLink) > 0:
 				return 'link', matchLink[0]
 
-		#could not scrap video
+		# could not scrap video
 		return None
