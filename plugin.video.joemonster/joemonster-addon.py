@@ -78,8 +78,13 @@ class JoeMonsterAddon(xbmcUtil.ViewAddonAbstract):
 
 			if vidType == 'vimeo':
 				# 'plugin://plugin.video.vimeo/', '0', '?path=/root/explore/staffpicks&action=play_video&videoid=47140924
-				vimeoLink = "plugin://plugin.video.vimeo/?action=play_video&videoid=" + vidLink
+				vimeoLink = "plugin://plugin.video.vimeo/play/?video_id=" + vidLink
 				return vimeoLink
+
+			if vidType == 'daily':
+				# plugin://plugin.video.dailymotion_com/?url=%VIDEOID%&mode=playVideo
+				dailyLink = "plugin://plugin.video.dailymotion_com/?mode=playVideo&url=" + vidLink
+				return dailyLink
 
 			if vidType == 'link':
 				return vidLink

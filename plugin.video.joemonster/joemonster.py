@@ -9,6 +9,9 @@ import time
 
 import CommonFunctions
 import xbmc
+from inspect import getmembers
+from pprint import pprint
+
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -34,7 +37,6 @@ class JoeMonster:
 	def scrapVideoList2(self, pg=1, category='najnowsze'):
 		content = self.readContentList(pg, category)
 		matchTitle = re.compile("<tr valign=\"top\".*?img src=\"(.*?)\".*?<a href=\"(.*?)\".*?<b>(.*?)</b>.*?</tr>", re.DOTALL).findall(content)
-		# xbmc.log(str(matchTitle))
 		retList = []
 		for m in matchTitle:
 			img = m[0]
@@ -46,7 +48,6 @@ class JoeMonster:
 	@staticmethod
 	def scrapVideoList(pg=1, category='najnowsze'):
 		url = 'http://www.joemonster.org/filmy/%s/%d' % (category, pg)
-		xbmc.log(url)
 
 		req = urllib2.Request(url)
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
@@ -87,7 +88,6 @@ class JoeMonster:
 	@staticmethod
 	def scrapWaitingVideos(pg=1):
 		url = 'http://www.joemonster.org/filmy/poczekalnia/%d' % pg
-		xbmc.log(url)
 
 		req = urllib2.Request(url)
 		req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
@@ -144,7 +144,6 @@ class JoeMonster:
 
 	def scrapVideo(self, link):
 		content = self.readVideoContent(link)
-
 		# ---- youtube ----
 		matchTitle = re.compile('src="http://www.youtube.com/embed/(.*?)\?').findall(content)
 
@@ -165,6 +164,20 @@ class JoeMonster:
 			jmVidLink = matchTitle[0]
 			return 'link', jmVidLink
 
+		# ---- x-link video with redirection ----
+		matchTitle = re.compile("src=\"http://get.x-link.pl/(.*?)\"").findall(content)
+		if len(matchTitle) > 0:
+			vidUrl = 'http://get.x-link.pl/' + matchTitle[0]
+			req = urllib2.Request(vidUrl)
+			req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
+			req.add_header('Referer', 'www.joemonster.org')
+			response = urllib2.urlopen(req)
+			matchTitle = re.compile("url_mp4: '(.*?)'").findall(response.read())
+			response.close()
+
+			jmVidLink = matchTitle[0]
+			return 'link', jmVidLink
+
 		# ---- joemonster video ----
 		matchTitle = re.compile("file=(.*?)&").findall(content)
 		if len(matchTitle) > 0:
@@ -177,8 +190,20 @@ class JoeMonster:
 			vid = matchTitle[0]
 			return 'vimeo', vid
 
+		# ----vimeo 2 ----
+		matchTitle = re.compile('<param .*? value=\"http://vimeo.com/moogaloop.swf\?clip_id=(.*?)"').findall(content)
+		if len(matchTitle) > 0:
+			vid = matchTitle[0]
+			return 'vimeo', vid
+
+		# ---- dailymotion ----
+		matchTitle = re.compile('<param .*? value=\"http://www.dailymotion.com/swf/video/(.*?)"').findall(content)
+		if len(matchTitle) > 0:
+			vid = matchTitle[0]
+			return 'daily', vid
+
 		# ---- joemonster iframe ----
-		matchTitle = re.compile('<iframe .*? src=\"http://joemonster.org/.embtv.php(.*?)"').findall(content)
+		matchTitle = re.compile('<iframe .*? src=\"http://joemonster.org/*embtv.php(.*?)"').findall(content)
 		if len(matchTitle) > 0:
 			iframeLink = 'embtv.php' + matchTitle[0]
 			iframeContent = self.readVideoContent(iframeLink)
@@ -193,6 +218,12 @@ class JoeMonster:
 			matchLink = re.compile('src=\"(http://.*?\.mp4)"').findall(iframeContent)
 			if len(matchLink) > 0:
 				return 'link', matchLink[0]
+
+		# ---- myepicwall video ----
+		matchTitle = re.compile('<IFRAME src=\"(http://img.myepicwall.com/.*?)"').findall(content)
+		if len(matchTitle) > 0:
+			jmVidLink = urllib.unquote(matchTitle[0])
+			return 'link', jmVidLink
 
 		# could not scrap video
 		return None
