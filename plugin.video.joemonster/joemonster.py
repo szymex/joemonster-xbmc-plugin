@@ -124,7 +124,7 @@ class JoeMonster:
 	def scrapPopularFilms(self):
 		content = self.readPopularFilms()
 		# content = content.decode('iso-8859-2')#.encode('utf8')
-		matchTitle = re.compile("<div class='mtvTopLista'><a href=\"(.*?)\".*?<img src=(.*?) .*?>(.*?)<.*?</div>").findall(content)
+		matchTitle = re.compile("<div class='mtvTopLista'>.*?<a href=\"(.*?)\".*?<img src=(.*?) .*?>(.*?)<.*?</div>", re.DOTALL).findall(content)
 
 		# link, img, title
 		return matchTitle

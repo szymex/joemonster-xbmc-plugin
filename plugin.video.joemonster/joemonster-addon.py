@@ -62,7 +62,7 @@ class JoeMonsterAddon(xbmcUtil.ViewAddonAbstract):
 				self.addViewLink('[COLOR blue][B] KOMENTSY [/B][/COLOR]', '')
 
 			num = title[:title.find('.') + 1]
-			title = "[COLOR green]%s[/COLOR] %s" % (num, title[(title.find('.') + 2):])
+			title = "[COLOR green]%s[/COLOR] %s" % (num, title[(title.find('.') + 2):].strip())
 
 			self.addVideoLink(title, link, img)
 
